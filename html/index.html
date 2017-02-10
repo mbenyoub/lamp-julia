@@ -1,0 +1,697 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- twitter bootstrap CSS stylesheet - included to make things pretty, not needed or used by dicomParser -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+
+        #dropZone {
+            height: 500px;
+            width: 100%;
+            background-color: #F0F0F0;
+            overflow: auto;
+        }
+
+
+    </style>
+
+</head>
+<body>
+<div class="container">
+
+    <div class="page-header">
+        <h1>Qualidade de Imagem </h1>
+        <p class="lead">
+        
+        </p>
+        <p>
+            Software para Realização do Teste de Qualidade da imagem.
+        </p>
+        
+    </div>
+
+
+    <div id="status" class="alert alert-success">
+        <div id="statusText">
+            Status: Aguardando Envio do Aquivo
+        </div>
+        <ul id="warnings">
+
+        </ul>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div id="dropZone">
+
+                    <div class="text-center" style="margin-top:225px;"><h3>Arraste e solte o arquivo DICOM Aqui!</h3></div>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+        <button type="button" style="display: none;" id="enviar" class="btn btn-primary">Enviar Dados</button>
+
+        <form id="formdata" >
+        <div id="dadosDicom" style="display: none;">
+
+        <br>
+
+
+   <input type="text" name="pixelData" class="hide" id="pixelData">
+
+        <div class="panel panel-default ">
+            <div class="panel-heading">
+                <h3 class="panel-title">Informações do Paciente</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-6">
+                        Nome do Paciente: <input type="text" name="paciente_nome" readonly data-dicom="x00100010">
+                    </div>
+                    <div class="col-xs-6">
+                        Paciente ID: <input type="text" name="paciente_id" readonly data-dicom="x00100020">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        Data de Nascimento: <input type="text" name="paciente_data_nascimento" readonly data-dicom="x00100030">
+                    </div>
+                    <div class="col-xs-6">
+                        Sexo: <input type="text" name="paciente_sexo" readonly data-dicom="x00100040">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Informação do Estudo</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-6">
+                        Estudo Descrição: <input type="text" name="extudo_descricao" readonly data-dicom="x00081030">
+                    </div>
+                    <div class="col-xs-6">
+                        Nome do protocolo: <input type="text" name="estudo_protocolo" readonly data-dicom="x00181030">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        Adesão #: <input type="text" name="estudo_adesao" readonly data-dicom="x00080050">
+                    </div>
+                    <div class="col-xs-6">
+                        ID do estudo: <input type="text" name="estudo_id" readonly data-dicom="x00200010">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        Data do Estudo: <input type="text" name="estudo_data" readonly data-dicom="x00080020">
+                    </div>
+                    <div class="col-xs-6">
+                        Tempo de estudo: <input type="text" name="estudo_tempo" readonly data-dicom="x00080030">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Informações sobre a série</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-6">
+                        Descrição da Série: <input type="text" name="serie_descricao" readonly data-dicom="x0008103e">
+                    </div>
+                    <div class="col-xs-6">
+                        Series #: <input type="text" name="serie" readonly data-dicom="x00200011">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        Modalidade: <input type="text" name="serie_modalidade" readonly data-dicom="x00080060">
+                    </div>
+                    <div class="col-xs-6">
+                        Parte do corpo: <input type="text" name="serie_partecorpo" readonly data-dicom="x00180015">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        Data da Série : <input type="text" name="serie_data" readonly data-dicom="x00080021">
+                    </div>
+                    <div class="col-xs-6">
+                        Tempo: <input type="text" name="serie_tempo" readonly data-dicom="x00080031">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Informações da instância</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-6">
+                        Instância #: <input type="text" name="instancia" readonly data-dicom="x00200013">
+                    </div>
+                    <div class="col-xs-6">
+                        Aquisição #: <input type="text" name="instancia_aquisicao" readonly data-dicom="x00200012">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        Data de Aquisição: <input type="text" name="instancia_data" readonly data-dicom="x00080022">
+                    </div>
+                    <div class="col-xs-6">
+                        Tempo de Aquisição: <input type="text" name="instancia_tempo" readonly data-dicom="x00080032">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        Data do conteúdo: <input type="text" name="instancia_dataconteudo" readonly data-dicom="x00080023">
+                    </div>
+                    <div class="col-xs-6">
+                        Tempo de conteúdo: <input type="text" name="instancia_tempoconteudo" readonly data-dicom="x00080033">
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Informação da imagem</h3>
+            </div>
+            <div class="panel-body">
+           
+                <div class="row">
+                    <div class="col-xs-6">
+                        Linhas: <input type="text" name="imagem_linhas" readonly data-dicomUint="x00280010">
+                    </div>
+                    <div class="col-xs-6">
+                        Colunas: <input type="text" name="imagem_colunas" readonly data-dicomUint="x00280011">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        Interpretação Fotométrica: <input type="text" name="imagem_fotometrica" readonly data-dicom="x00280004">
+                    </div>
+                    <div class="col-xs-6">
+                        Tipo de Imagem: <input type="text" name="imagem_tipo" readonly data-dicom="x00080008">
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        Bits alocados: <input type="text" name="imagem_bitsalocados" readonly data-dicomUint="x00280100">
+                    </div>
+                    <div class="col-xs-6">
+                        Bits armazenados: <input type="text" name="imagem_armazenados" readonly data-dicomUint="x00280101">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        HighBit: <input type="text" name="imagem_highbit" readonly data-dicomUint="x00280102">
+                    </div>
+                    <div class="col-xs-6">
+                        Pixel Representation (0=us): <input type="text" name="imagem_pixelrepresentation" readonly data-dicomUint="x00280103">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        Rescale Slope: <input type="text" name="imagem_slope" readonly data-dicom="x00281053">
+                    </div>
+                    <div class="col-xs-6">
+                        Rescale Intercept: <input type="text" name="imagem_intercept" readonly data-dicom="x00281052">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        Posição da Imagem Paciente: <input type="text" name="imagem_posicaopaciente" readonly data-dicom="x00200032">
+                    </div>
+                    <div class="col-xs-6">
+                        Orientação da Imagem Paciente: <input type="text" name="imagem_orientacaopaciente" readonly data-dicom="x00200037">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        Espaçamento de pixels: <input type="text" name="imagem_espacamentopixel" readonly data-dicom="x00280030">
+                    </div>
+                    <div class="col-xs-6">
+                        Amostras por pixel: <input type="text" name="imagem_amostrapixel" readonly data-dicomUint="x00280002">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                Informação do equipamento</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-6">
+                        Fabricante: <input type="text" name="equipamento_fabricante" readonly data-dicom="x00080070">
+                    </div>
+                    <div class="col-xs-6">
+                        Modelo: <input type="text" name="equipamento_modelo" readonly data-dicom="x00081090">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                     Nome da estação: <input type="text" name="equipamento_estacao" readonly data-dicom="x00081010">
+                    </div>
+                    <div class="col-xs-6">
+                        AE Title: <input type="text" name="equipamento_aet" readonly data-dicom="x00020016">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        Nome da Instituição: <input type="text" name="instituicao" readonly data-dicom="x00080080">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        Software Versão: <input type="text" name="equipamento_software" readonly data-dicom="x00181020">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        Nome da versão de implementação: <input type="text" name="equipamento_softwareversao" readonly data-dicom="x00020013">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+   
+    </div>
+            
+        </form>
+            
+        </div>
+    </div>
+
+</div>
+
+</body>
+
+
+
+<!-- include the dicomParser library -->
+<script src="dicomParser/dist/dicomParser.js"></script>
+
+<!-- jquery - included to make things easier to demo, not needed by dicomParser -->
+<script
+  src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
+
+<script>
+
+    // helper function to see if a string only has ascii characters in it
+    function isASCII(str) {
+        return /^[\x00-\x7F]*$/.test(str);
+    }
+
+    // This function iterates through dataSet recursively and adds new HTML strings
+    // to the output array passed into it
+    function dumpDataSet(dataSet, output) {
+        // the dataSet.elements object contains properties for each element parsed.  The name of the property
+        // is based on the elements tag and looks like 'xGGGGEEEE' where GGGG is the group number and EEEE is the
+        // element number both with lowercase hexadecimal letters.  For example, the Series Description DICOM element 0008,103E would
+        // be named 'x0008103e'.  Here we iterate over each property (element) so we can build a string describing its
+        // contents to add to the output array
+        try {
+            for (var propertyName in dataSet.elements) {
+                var element = dataSet.elements[propertyName];
+
+                // The output string begins with the element tag, length and VR (if present).  VR is undefined for
+                // implicit transfer syntaxes
+                var text = element.tag;
+                text += " length=" + element.length;
+
+                if (element.hadUndefinedLength) {
+                    text += " <strong>(-1)</strong>";
+                }
+                text += "; ";
+
+                if (element.vr) {
+                    text += " VR=" + element.vr + "; ";
+                }
+
+                var color = 'black';
+
+                // Here we check for Sequence items and iterate over them if present.  items will not be set in the
+                // element object for elements that don't have SQ VR type.  Note that implicit little endian
+                // sequences will are currently not parsed.
+                if (element.items) {
+                    output.push('<li>' + text + '</li>');
+                    output.push('<ul>');
+
+                    // each item contains its own data set so we iterate over the items
+                    // and recursively call this function
+                    var itemNumber = 0;
+                    element.items.forEach(function (item) {
+                        output.push('<li>Item #' + itemNumber++ + ' ' + item.tag + '</li>')
+                        output.push('<ul>');
+                        dumpDataSet(item.dataSet, output);
+                        output.push('</ul>');
+                    });
+                    output.push('</ul>');
+                }
+                else if (element.fragments) {
+                    output.push('<li>' + text + '</li>');
+                    output.push('<ul>');
+
+                    // each item contains its own data set so we iterate over the items
+                    // and recursively call this function
+                    var itemNumber = 0;
+                    element.fragments.forEach(function (fragment) {
+                        var basicOffset;
+                        if(element.basicOffsetTable) {
+                            basicOffset = element.basicOffsetTable[itemNumber];
+                        }
+
+                        var str = '<li>Fragment #' + itemNumber++ + ' offset = ' + fragment.offset;
+                        str += '(' + basicOffset + ')';
+                        str += '; length = ' + fragment.length + '</li>';
+                        output.push(str);
+                    });
+                    output.push('</ul>');
+                }
+                else {
+
+
+                    // if the length of the element is less than 128 we try to show it.  We put this check in
+                    // to avoid displaying large strings which makes it harder to use.
+                    if (element.length < 10000000) {
+                        // Since the dataset might be encoded using implicit transfer syntax and we aren't using
+                        // a data dictionary, we need some simple logic to figure out what data types these
+                        // elements might be.  Since the dataset might also be explicit we could be switch on the
+                        // VR and do a better job on this, perhaps we can do that in another example
+
+                        // First we check to see if the element's length is appropriate for a UI or US VR.
+                        // US is an important type because it is used for the
+                        // image Rows and Columns so that is why those are assumed over other VR types.
+                        if (element.length === 2) {
+                            text += " (" + dataSet.uint16(propertyName) + ")";
+                        }
+                        else if (element.length === 4) {
+                            text += " (" + dataSet.uint32(propertyName) + ")";
+                        }
+
+                        // Next we ask the dataset to give us the element's data in string form.  Most elements are
+                        // strings but some aren't so we do a quick check to make sure it actually has all ascii
+                        // characters so we know it is reasonable to display it.
+                        var str = dataSet.string(propertyName);
+                        var stringIsAscii = isASCII(str);
+                        
+                      
+
+                        if (stringIsAscii) {
+                            // the string will be undefined if the element is present but has no data
+                            // (i.e. attribute is of type 2 or 3 ) so we only display the string if it has
+                            // data.  Note that the length of the element will be 0 to indicate "no data"
+                            // so we don't put anything here for the value in that case.
+                            if (str !== undefined) {
+                                text += '"' + str + '"';
+                            }
+                        }
+                        else {
+                            if (element.length !== 2 && element.length !== 4) {
+                                color = '#C8C8C8';
+                                // If it is some other length and we have no string
+                                text += "<i>binary data</i>";
+                            }
+                        }
+
+                        if (element.length === 0) {
+                            color = '#C8C8C8';
+                        }
+
+                    }
+                    else {
+                        color = '#C8C8C8';
+
+                        // Add text saying the data is too long to show...
+                        text += "<i>data too long to show</i>";
+                    }
+                    // finally we add the string to our output array surrounded by li elements so it shows up in the
+                    // DOM as a list
+                    output.push('<li style="color:' + color + ';">' + text + '</li>');
+
+                }
+            }
+        } catch(err) {
+            var ex = {
+                exception: err,
+                output: output
+            }
+            throw ex;
+        }
+    }
+
+    // This function will read the file into memory and then start dumping it
+    function dumpFile(file)
+    {
+        // clear any data currently being displayed as we parse this next file
+        document.getElementById('dropZone').innerHTML = '';
+        $('#status').removeClass('alert-warning alert-success alert-danger').addClass('alert-info');
+        $('#warnings').empty();
+        document.getElementById('statusText').innerHTML = 'Status: Lendo Arquivo, por favor aguarde..';
+
+        var reader = new FileReader();
+        reader.onload = function(file) {
+            var arrayBuffer = reader.result;
+            // Here we have the file data as an ArrayBuffer.  dicomParser requires as input a
+            // Uint8Array so we create that here
+            var byteArray = new Uint8Array(arrayBuffer);
+            var kb = byteArray.length / 1024;
+            var mb = kb / 1024;
+            var byteStr = mb > 1 ? mb.toFixed(3) + " MB" : kb.toFixed(0) + " KB";
+            document.getElementById('statusText').innerHTML = 'Status: Análise ' + byteStr + ' bytes, por favor aguarde..';
+            // set a short timeout to do the parse so the DOM has time to update itself with the above message
+            setTimeout(function() {
+
+                // Invoke the paresDicom function and get back a DataSet object with the contents
+                var dataSet;
+                try {
+                    var start = new Date().getTime();
+                    dataSet = dicomParser.parseDicom(byteArray);
+
+                     dumpDataSet(dataSet);
+                    
+                    
+                    //var dataSet = dicomParser.parseDicom(byteArray/*, options */);
+                    
+                                     // access a string element
+                    var studyInstanceUid = dataSet.string('x0020000d');
+                    
+                    console.log("-----------------------------------studyInstanceUid")
+                    //console.log(studyInstanceUid)
+                
+                    // get the pixel data element (contains the offset and length of the data)
+                    var pixelDataElement = dataSet.elements.x7fe00010;
+                    console.log("----------------------------------pixelDataElement")
+                    // console.log(pixelDataElement)
+                     
+            
+                     
+             
+                
+                    // create a typed array on the pixel data (this example assumes 16 bit unsigned data)
+                    var pixelData = new Uint8Array(dataSet.byteArray.buffer, pixelDataElement.dataOffset, pixelDataElement.length);
+                    console.log('----------------------------------pixelData')
+                    //console.log(pixelData)
+                    
+                    //SendData(pixelData)
+                    $("#pixelData").val(pixelData) 
+
+                    // Here we call dumpDataSet to recursively iterate through the DataSet and create an array
+                    // of strings of the contents.
+                    var output = [];
+                    dumpDataSet(dataSet, output);
+
+                    // Combine the array of strings into one string and add it to the DOM
+                    document.getElementById('dropZone').innerHTML = '<ul>' + output.join('') + '</ul>';
+
+                    var end = new Date().getTime();
+                    var time = end - start;
+                    if(dataSet.warnings.length > 0)
+                    {
+                        $('#status').removeClass('alert-success alert-info alert-danger').addClass('alert-warning');
+                        $('#statusText').html('Status: Warnings encountered while parsing file (file of size '+ byteStr + ' parsed in ' + time + 'ms)');
+                        hideDropzone();
+
+                            
+
+                        dataSet.warnings.forEach(function(warning) {
+                            $("#warnings").append('<li>' + warning +'</li>');
+                        });
+                    }
+                    else
+                    {
+                        var pixelData = dataSet.elements.x7fe00010;
+                        if(pixelData) {
+                            $('#status').removeClass('alert-warning alert-info alert-danger').addClass('alert-success');
+                            $('#statusText').html('Status: Ready (file of size '+ byteStr + ' parsed in ' + time + 'ms)');
+                            hideDropzone();
+                        }
+                        else
+                        {
+                            $('#status').removeClass('alert-warning alert-info alert-danger').addClass('alert-success');
+                            $('#statusText').html('Status: Ready - no pixel data found (file of size ' + byteStr + ' parsed in ' + time + 'ms)');
+                            hideDropzone();
+                        }
+                    }
+
+
+                }
+                catch(err)
+                {
+                    var message = err;
+                    if(err.exception) {
+                        message = err.exception;
+                    }
+
+                    $('#status').removeClass('alert-success alert-info alert-warning').addClass('alert-danger');
+                    document.getElementById('statusText').innerHTML = 'Status: Error - ' + message + ' (file of size ' + byteStr + ' )';
+                    if(err.output) {
+                        document.getElementById('dropZone').innerHTML = '<ul>' + output.join('') + '</ul>';
+                    }
+                    else if(err.dataSet) {
+                        var output = [];
+                        dumpDataSet(err.dataSet, output);
+                        document.getElementById('dropZone').innerHTML = '<ul>' + output.join('') + '</ul>';
+                    }
+                }
+            },10);
+        };
+
+        reader.readAsArrayBuffer(file);
+    }
+
+    function dumpDataSet(dataSet)
+    {
+        $('input[data-dicom]').each(function(index, value)
+        {
+            var attr = $(value).attr('data-dicom');
+            var element = dataSet.elements[attr];
+            var text = "";
+            if(element !== undefined)
+            {
+                var str = dataSet.string(attr);
+                if(str !== undefined) {
+                    text = str;
+                }
+            }
+            $(value).val(text);
+        });
+
+        $('input[data-dicomUint]').each(function(index, value)
+        {
+            var attr = $(value).attr('data-dicomUint');
+            var element = dataSet.elements[attr];
+            var text = "";
+            if(element !== undefined)
+            {
+                if(element.length === 2)
+                {
+                    text += dataSet.uint16(attr);
+                }
+                else if(element.length === 4)
+                {
+                    text += dataSet.uint32(attr);
+                }
+            }
+
+            $(value).val(text);
+        });
+
+    }
+    // this function gets called once the user drops the file onto the div
+    function handleFileSelect(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+
+        // Get the FileList object that contains the list of files that were dropped
+        var files = evt.dataTransfer.files;
+
+        // this UI is only built for a single file so just dump the first one
+        dumpFile(files[0]);
+    }
+
+    function handleDragOver(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+        evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+    }
+
+    // Setup the dnd listeners.
+    var dropZone = document.getElementById('dropZone');
+    dropZone.addEventListener('dragover', handleDragOver, false);
+    dropZone.addEventListener('drop', handleFileSelect, false);
+
+    function hideDropzone(){
+        $("#dropZone").hide();
+    
+        $("#dadosDicom").show();
+         $("#enviar").show();
+       
+
+
+    }
+
+    $( "#enviar" ).click(function() {
+      SendData()
+    });
+
+	function SendData(){
+	   // console.log('uuuuuu')
+	    //console.log(valores)
+	    var url_local = "http://localhost/MTF/processa.php";
+	    var valores = $('#formdata').serialize();
+	  // var token = $( "input[name='_token']" ).val();   
+	     //iniciamos o ajax
+	      $.ajax({
+	      //definimos a url
+	          url : url_local,
+	       // Token    
+	        //  headers: {'X-CSRF-TOKEN': token},
+	      //definimos o tipo de requisição
+	          type: 'POST',
+	      //definimos o tipo de retorno
+	          dataType : 'html',
+	      //colocamos os valores a serem enviados
+	          data: valores,
+	      //antes de enviar ele alerta para esperar
+	          beforeSend : function(){
+	             // $('#carregando').show('100');
+	          },
+	      //colocamos o retorno na tela
+	          success : function(data){
+	          
+		          alert(data)
+	          } 
+	      });  
+	}
+
+</script>
+</html>
