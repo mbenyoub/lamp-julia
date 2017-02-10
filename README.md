@@ -5,7 +5,7 @@
 #How to use
 
 ```bash
-git clone https://github.com/carlosqueiroz/docker-lamp.git
+git clone https://github.com/carlosqueiroz/lamp-julia.git
 cd docker-lamp/
 docker-compose up -d
 ```
@@ -16,3 +16,9 @@ docker-compose exec php bash
 julia
 exit
 ```
+
+#Remove  all Conteiners and Images
+```bash
+docker rm --force $(docker ps -a -q)  
+docker rmi --force $(docker images -q)
+ ```
