@@ -6,7 +6,7 @@
 
 ```bash
 git clone https://github.com/carlosqueiroz/lamp-julia.git
-cd docker-lamp/
+cd lamp-julia/
 docker-compose up -d
 ```
 
