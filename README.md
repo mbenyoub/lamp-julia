@@ -5,7 +5,7 @@
 #How to use
 
 ```bash
-git clone https://github.com/carlosqueiroz/lamp-julia.git
+git clone https://github.com/mbenyoub/lamp-julia.git
 cd lamp-julia/
 docker-compose up -d
 ```
