@@ -2,9 +2,9 @@ version: '2'
 services: 
   mysql: 
     build: ./mysql environment: 
-      MYSQL_ROOT_PASSWORD: password 
-      volumes: 
-        - db:/var/lib/mysql 
+    MYSQL_ROOT_PASSWORD: password 
+    volumes: 
+      - db:/var/lib/mysql 
   php: 
     build: ./php 
     ports: 
