@@ -1,8 +1,7 @@
 version: '2'
 services:
   mysql:
-    build: ./mysql
-    environment:
+    build: ./mysql environment:
       MYSQL_ROOT_PASSWORD: password
       volumes:
       - db:/var/lib/mysql
