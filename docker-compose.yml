@@ -4,7 +4,7 @@ services:
     build: ./mysql
     environment:
       MYSQL_ROOT_PASSWORD: password
-    volumes:
+      volumes:
       - db:/var/lib/mysql
   php:
     build: ./php
